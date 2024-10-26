@@ -21,11 +21,30 @@ eta = 0.5
 C_s = 0.434
 L_s = 0.388
 Y = 0.596
-#above sets the parameters, below we implent main which recursivley returns to us list of each variable#
+#above sets the parameters, below main func just forward iterates#
+#prob some allignment issues by one or two periods, doesn't really matter tho#
+investment = []
+gdp = []
 consumption = []
+labour = []
 capital = [0]
 shock = [0] 
 wage = []
+
+def investment_t(t):
+    inves_temp = ((-1*C_s)/(Y-C_s))*gamma_1*capital[t] + (((Y/(Y-C_s))) - gamma_2*((C_s)/(Y-C_s)))*shock[t]
+    investment.append(inves_temp)
+    return investment
+
+def gdp_t(t):
+    gdp_temp = ((C_s)/(Y))*gamma_1*capital[t] +(((C_s)/(Y))*gamma_2 - 1)*shock[t]
+    gdp.append(gdp_temp)
+    return gdp 
+
+def labour_t(t):
+    labour_temp = (alpha-eta*gamma_1)/((1/(1-L_s))+alpha)*capital[t] + (-1*eta*gamma_2)/((1/(1-L_s))+alpha)*shock[t]
+    labour.append(labour_temp)
+    return labour
 
 def shock_t(t):
     shock_temp = rho*shock[t]
@@ -53,24 +72,41 @@ def main(n):
         if t <= 10:
             consumption_t(capital,shock,t)
             wage_t(capital,shock,t)
+            labour_t(t)
+            gdp_t(t)
+            investment_t(t)
             capital_t_1(capital,shock,t)
             shock_t(t)
         elif t == 11:
             shock[-1] = 1
             consumption_t(capital,shock,t)
             wage_t(capital,shock,t)
+            labour_t(t)
+            gdp_t(t)
+            investment_t(t)
             capital_t_1(capital,shock,t)
             shock_t(t)
         else:
             consumption_t(capital,shock,t)
             wage_t(capital,shock,t)
+            labour_t(t)
+            gdp_t(t)
+            investment_t(t)
             capital_t_1(capital,shock,t)
             shock_t(t)
-    return consumption, capital, wage, shock
+    return consumption, wage,labour, gdp, investment, capital, shock
 
 main(n=100)
 
 
-plt.plot(np.array(consumption, dtype=float), color="blue")
+plt.plot(consumption, label='consumption',color="blue")
+plt.plot(investment, label='investment', color='red')
+plt.plot(gdp, label='Y', color='green')
+plt.plot(shock,label='shock', color='orange')
 
-plt.savefig('test')
+plt.legend()
+plt.savefig('test1')
+
+plt.plot()
+
+#add the plots for the labour market side stuff#
