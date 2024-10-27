@@ -88,6 +88,12 @@ def main(n):
             investment_t(t)
             capital_t_1(capital,shock,t)
             shock_t(t)
+        elif t == 99:
+            consumption_t(capital,shock,t)
+            wage_t(capital,shock,t)
+            labour_t(t)
+            gdp_t(t)
+            investment_t(t)
         else:
             consumption_t(capital,shock,t)
             wage_t(capital,shock,t)
@@ -110,7 +116,7 @@ plt.plot(wage, label='wage', color='purple')
 plt.plot(labour, label='labour',color='pink')
 
 plt.legend()
-#plt.savefig('test6')
+#plt.savefig('test7')
 
 plt.plot()
 
@@ -120,6 +126,21 @@ cycle_gdp, trend_gdp = sm.tsa.filters.hpfilter(gdp, lamb=1600)
 cycle_cap, trend_cap = sm.tsa.filters.hpfilter(capital, lamb=1600)
 cycle_wage, trend_wage = sm.tsa.filters.hpfilter(wage, lamb=1600)
 cycle_lab, trend_lab = sm.tsa.filters.hpfilter(labour, lamb=1600)
-
+#above gives the cycle and trend seperations for each series#
 
 #add the plots for the labour market side stuff#
+
+#below we compute the stats for each#
+print('covariance of output and investment:' ,np.corrcoef(cycle_gdp,cycle_inves)[0,1])
+print('covariance of output and consumption:' ,np.corrcoef(cycle_gdp,cycle_consumption)[0,1])
+print('covariance of output and capital:' ,np.corrcoef(cycle_gdp,cycle_cap)[0,1])
+print('covariance of output and wage:' ,np.corrcoef(cycle_gdp,cycle_wage)[0,1])
+print('covariance of output and labour:' ,np.corrcoef(cycle_gdp,cycle_lab)[0,1])
+
+output_volatility = np.std(cycle_gdp)
+
+print('volatility of investment relative to output:' ,np.std(cycle_inves)/(output_volatility))
+print('volatility of consumption relative to output:' ,np.std(cycle_consumption)/(output_volatility))
+print('volatility of capital relative to output:' ,np.std(cycle_cap)/(output_volatility))
+print('volatility of wage relative to output:' ,np.std(cycle_wage)/(output_volatility))
+print('volatility of labour relative to ouput:' ,np.std(cycle_lab)/(output_volatility))
