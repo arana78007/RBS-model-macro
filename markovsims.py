@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 import numpy as np
+import statsmodels.api as sm
 
 gamma_1 = 0.69
 gamma_2 = -5.15
@@ -47,7 +48,7 @@ def labour_t(t):
     return labour
 
 def shock_t(t):
-    shock_temp = rho*shock[t]
+    shock_temp = rho*(shock[t]+np.random.normal(0,1))
     shock.append(shock_temp)
     return shock
     
@@ -109,8 +110,16 @@ plt.plot(wage, label='wage', color='purple')
 plt.plot(labour, label='labour',color='pink')
 
 plt.legend()
-plt.savefig('test3')
+#plt.savefig('test6')
 
 plt.plot()
+
+cycle_consumption, trend_consumption = sm.tsa.filters.hpfilter(consumption, lamb=1600)
+cycle_inves, trend_inves = sm.tsa.filters.hpfilter(investment, lamb=1600)
+cycle_gdp, trend_gdp = sm.tsa.filters.hpfilter(gdp, lamb=1600)
+cycle_cap, trend_cap = sm.tsa.filters.hpfilter(capital, lamb=1600)
+cycle_wage, trend_wage = sm.tsa.filters.hpfilter(wage, lamb=1600)
+cycle_lab, trend_lab = sm.tsa.filters.hpfilter(labour, lamb=1600)
+
 
 #add the plots for the labour market side stuff#
