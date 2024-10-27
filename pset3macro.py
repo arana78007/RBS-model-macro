@@ -21,6 +21,7 @@ eta = 0.5
 C_s = 0.434
 L_s = 0.388
 Y = 0.596
+Y_K = (1/alpha)*((1/beta)-(1-delta))
 #above sets the parameters, below main func just forward iterates#
 #prob some allignment issues by one or two periods, doesn't really matter tho#
 investment = []
@@ -32,12 +33,12 @@ shock = [0]
 wage = []
 
 def investment_t(t):
-    inves_temp = ((-1*C_s)/(Y-C_s))*gamma_1*capital[t] + (((Y/(Y-C_s))) - gamma_2*((C_s)/(Y-C_s)))*shock[t]
+    inves_temp = ((1/Y_K)*gamma_3-(1-delta)*(1/Y_K))*capital[t] + ((1/Y_K)*gamma_4)*shock[t]
     investment.append(inves_temp)
     return investment
 
 def gdp_t(t):
-    gdp_temp = ((C_s)/(Y))*gamma_1*capital[t] +(((C_s)/(Y))*gamma_2 - 1)*shock[t]
+    gdp_temp = (1/2)*(((C_s/Y)*gamma_1-(1-delta)*(1/Y_K)+(1/Y_K)*gamma_3)*capital[t]+ (((C_s/Y)*gamma_2)+(1/Y_K)*gamma_4)*shock[t])
     gdp.append(gdp_temp)
     return gdp 
 
@@ -109,7 +110,7 @@ plt.plot(wage, label='wage', color='purple')
 plt.plot(labour, label='labour',color='pink')
 
 plt.legend()
-plt.savefig('test3')
+plt.savefig('finalIRF')
 
 plt.plot()
 
